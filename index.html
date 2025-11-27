@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OwoAI – Financial Education Chatbot</title>
+  <meta name="description" content="OwoAI is an accessible, multilingual financial literacy chatbot for low-income and unbanked individuals, especially women and young people." />
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #D0F0C0; /* tea green */ /* soft light forest green */
+      --bg-alt: #E8F8D8; /* lighter tea green */ /* pale leafy green */
+      --card-bg: #f5ffe8; /* soft pale mint card */
+      --accent: #4B5320; /* army green */ /* bright orange (fruitful) */
+      --accent-soft: rgba(75, 83, 32, 0.16);
+      --accent-strong: #6B8E23; /* olive army green */ /* warm mango yellow */
+      --text-main: #2f3e2c; /* deep leafy green */
+      --text-muted: #6b7c5a; /* soft herb green */
+      --border-subtle: rgba(90, 120, 80, 0.35);
+      --danger: #f43f5e; /* bright red accent */ /* bright orange */ /* lively strawberry red */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(to bottom right, #0b1437, #0f1e57);
+      min-height: 100vh;
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    .page-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(20px);
+      background: linear-gradient(to right, #0b1437, #0f1e57);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 1.25rem;
+      background: conic-gradient(from 160deg, #22c55e, #38bdf8, #a855f7, #22c55e);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 1px rgba(208, 240, 192, 0.9), 0 18px 40px rgba(208, 240, 192, 0.9);
+    }
+
+    .brand-mark-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: radial-gradient(circle at 20% 0%, #D0F0C0, #D0F0C0 55%, #D0F0C0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .brand-text span:first-child {
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+      color: #000000;
+    }
+
+    .brand-text span:last-child {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #c7d7ff;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: all 160ms ease-out;
+    }
+
+    nav a:hover {
+      color: var(--text-main);
+      border-color: rgba(148, 163, 184, 0.6);
+      background: radial-gradient(circle at top, rgba(148, 163, 184, 0.12), transparent 55%);
+    }
+
+    .nav-cta {
+      border-color: rgba(34, 197, 94, 0.7);
+      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.22), transparent 60%);
+      color: #4B5320; /* soft fruit orange */
+    }
+
+    .nav-cta:hover {
+      background: linear-gradient(to bottom right, #fafff2, #e8f8d8);
+      box-shadow: 0 12px 30px rgba(208, 240, 192, 0.9);
+    }
+
+    /* Layout */
+    main {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    section {
+      position: relative;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #4B5320; /* soft fruit orange */
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-heading {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.02em;
+    }
+
+    .section-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 40rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 1.8rem;
+      align-items: stretch;
+    }
+
+    .card {
+      border-radius: 1.4rem;
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(to bottom right, #fafff2, #e8f8d8);
+      box-shadow: 0 28px 80px rgba(208, 240, 192, 0.85);
+      padding: 1.4rem 1.5rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      color: #4B5320; /* soft fruit orange */
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 197, 94, 0.45);
+      background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.24), transparent 70%);
+      margin-bottom: 0.85rem;
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.9);
+    }
+
+    .hero-title {
+      font-size: clamp(1.8rem, 2.6vw + 1.4rem, 2.7rem);
+      line-height: 1.12;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(to bottom right, #fafff2, #e8f8d8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-text {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+      max-width: 36rem;
+    }
+
+    .hero-metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.35rem;
+    }
+
+    .hero-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .hero-metric strong {
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .hero-metric span {
+      color: var(--danger);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.15rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+      background: none;
+      color: var(--text-main);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 160ms ease-out;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #D0F0C0, #E8F8D8);
+      box-shadow: 0 16px 40px rgba(208, 240, 192, 0.6);
+      border-color: #cfeeca;
+      color: #2f3e2c;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) translateZ(0);
+      box-shadow: 0 22px 60px rgba(208, 240, 192, 0.95);
+      filter: brightness(1.05);
+    }
+
+    .btn-ghost {
+      border-color: rgba(148, 163, 184, 0.6);
+      color: var(--text-muted);
+      background: radial-gradient(circle at top, rgba(148, 163, 184, 0.2), transparent 65%);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text-main);
+      border-color: rgba(148, 163, 184, 0.9);
+    }
+
+    .hero-footnote {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .hero-footnote strong {
+      color: #4B5320; /* soft fruit orange */
+    }
+
+    .hero-visual {
+      position: relative;
+      height: 100%;
+      min-height: 260px;
+    }
+
+    .hero-orbit {
+      position: absolute;
+      inset: 0;
+      border-radius: 1.5rem;
+      background: radial-gradient(circle at 10% 0%, rgba(34, 197, 94, 0.4), transparent 60%),
+                  radial-gradient(circle at 90% 30%, rgba(56, 189, 248, 0.45), transparent 70%),
+                  radial-gradient(circle at 50% 120%, rgba(168, 85, 247, 0.55), transparent 70%);
+      opacity: 0.42;
+      filter: blur(4px);
+    }
+
+    .hero-panel {
+      position: relative;
+      margin: 0 auto;
+      margin-top: 1rem;
+      max-width: 320px;
+      border-radius: 1.3rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: linear-gradient(to bottom right, #fafff2, #e8f8d8);
+      padding: 0.9rem 1rem;
+      box-shadow: 0 26px 60px rgba(208, 240, 192, 0.96);
+    }
+
+    .hero-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.65rem;
+      gap: 0.6rem;
+    }
+
+    .hero-panel-user {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: linear-gradient(to bottom right, #fafff2, #e8f8d8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #022c22;
+    }
+
+    .hero-panel-user div {
+      display: flex;
+      flex-direction: column;
+      gap: 0.05rem;
+    }
+
+    .hero-panel-user strong {
+      font-size: 0.75rem;
+    }
+
+    .hero-panel-user span {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .hero-chip {
+      font-size: 0.68rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.6);
+      color: #bbf7d0;
+    }
+
+    .chat-bubbles {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.7rem;
+      font-size: 0.74rem;
+    }
+
+    .bubble {
+      max-width: 92%;
+      padding: 0.55rem 0.7rem;
+      border-radius: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .bubble.user {
+      align-self: flex-end;
+      background: rgba(208, 240, 192, 0.9);
+      border-top-right-radius: 0.15rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .bubble.bot {
+      align-self: flex-start;
+      background: rgba(208, 240, 192, 0.96);
+      border-top-left-radius: 0.15rem;
+      border: 1px solid rgba(34, 197, 94, 0.6);
+    }
+
+    .bubble.bot strong {
+      color: #4B5320; /* soft fruit orange */
+    }
+
+    .hero-panel-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 0.22rem 0.22rem 0.22rem 0.6rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .hero-panel-footer span {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .hero-mic {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: none;
+      background: radial-gradient(circle at 30% 0%, #4ade80, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: #022c22;
+    }
+
+    .hero-badges {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      position: absolute;
+      font-size: 0.65rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: linear-gradient(to bottom right, #fafff2, #e8f8d8);
+      box-shadow: 0 14px 40px rgba(208, 240, 192, 0.96);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+
+    .hero-badge span {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.95);
+    }
+
+    .hero-badge.badge-1 {
+      top: 10px;
+      right: -4px;
+    }
+
+    .hero-badge.badge-2 {
+      bottom: 10px;
+      left: -8px;
+    }
+
+    /* Hero theming inspired by portfolio layout */
+    #home {
+      margin-top: 0.5rem;
+    }
+
+    #home .grid {
+      align-items: center;
+    }
+
+    #home .card {
+  background: linear-gradient(to bottom right, #0b1437, #111a44 60%, #0a112d 100%);
+  color: #ffffff;
+  box-shadow: 0 32px 80px rgba(5, 10, 30, 0.6);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+    #home .hero-title { color: #ffffff; }
+
+    #home .hero-text,
+    #home .hero-footnote,
+    #home .hero-metric,
+    #home .hero-metric span {
+      color: rgba(232, 244, 234, 0.9);
+    }
+
+    #home .hero-metric strong {
+      color: #ffffff;
+    }
+
+    #home .pill {
+      background: rgba(248, 250, 252, 0.06);
+      border-color: rgba(248, 250, 252, 0.4);
+      color: #f9fdf8;
+    }
+
+    #home .pill-dot {
+      background: #D0F0C0;
+      box-shadow: 0 0 16px rgba(208, 240, 192, 0.9);
+    }
+
+    #home .btn-ghost {
+      border-color: rgba(248, 250, 252, 0.5);
+      color: rgba(232, 244, 234, 0.9);
+      background: rgba(15, 23, 17, 0.3);
+    }
+
+    #home .btn-ghost:hover {
+      border-color: #ffffff;
+      color: #ffffff;
+    }
+
+    #home .btn-primary {
+      background: linear-gradient(to right, #D0F0C0, #ffd166);
+      border-color: rgba(255, 225, 166, 0.9);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      color: #231b10;
+    }
+
+    #home .hero-panel {
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.65);
+    }
+
+    /* About & How it helps */
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 1.6rem;
+      align-items: start;
+    }
+
+    .list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .list-item-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-main);
+      margin-bottom: 0.15rem;
+    }
+
+    .list li {
+      padding-left: 1.45rem;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.5em;
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0%, #22c55e, #4ade80);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.4rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--text-muted);
+      background: radial-gradient(circle at top, rgba(148, 163, 184, 0.18), transparent 70%);
+      white-space: nowrap;
+    }
+
+    .video-embed {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 18px 50px rgba(208, 240, 192, 0.96);
+    }
+
+    .video-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Community */
+    .community-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .community-card {
+      border-radius: 1.1rem;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: linear-gradient(to bottom right, #fafff2, #e8f8d8);
+      padding: 1rem 1.05rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .community-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .community-pill {
+      font-size: 0.68rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.18);
+      color: #bbf7d0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .community-pill span {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #bbf7d0;
+    }
+
+    /* Contact */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.05fr);
+      gap: 1.6rem;
+      align-items: start;
+    }
+
+    .contact-details {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .contact-details strong {
+      color: var(--text-main);
+    }
+
+    .contact-details a {
+      color: #4B5320; /* soft fruit orange */
+      text-decoration: none;
+    }
+
+    .contact-details a:hover {
+      text-decoration: underline;
+    }
+
+    .contact-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .contact-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .contact-card {
+      border-radius: 1.2rem;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: linear-gradient(to bottom right, #fafff2, #e8f8d8);
+      padding: 1.1rem 1.15rem;
+      box-shadow: 0 24px 60px rgba(208, 240, 192, 0.96);
+      font-size: 0.8rem;
+    }
+
+    .contact-card h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .contact-card p {
+      margin-bottom: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.18rem;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      border-radius: 0.7rem;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(208, 240, 192, 0.96);
+      padding: 0.5rem 0.75rem;
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: rgba(34, 197, 94, 0.85);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.45);
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .small-hint {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .submit-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-top: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .submit-row p {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: space-between;
+    }
+
+    footer a {
+      color: #4B5320; /* soft fruit orange */
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 850px) {
+      .grid,
+      .two-col,
+      .community-grid,
+      .contact-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .community-grid {
+        gap: 0.85rem;
+      }
+
+      .nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav ul {
+        justify-content: flex-start;
+      }
+
+      .hero-panel {
+        max-width: 100%;
+      }
+
+      .hero-badge.badge-1 {
+        right: 4px;
+      }
+
+      .hero-badge.badge-2 {
+        left: 4px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .page-shell {
+        padding-inline: 1rem;
+      }
+
+      .card {
+        padding: 1.1rem 1.1rem;
+      }
+
+      .hero-title {
+        font-size: 1.7rem;
+      }
+
+      nav ul {
+        gap: 0.4rem;
+      }
+
+      nav a {
+        font-size: 0.75rem;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn,
+      .submit-row button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .community-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-inner">
+      <div class="brand">
+        <div class="brand-mark">
+          <div class="brand-mark-inner">₦</div>
+        </div>
+        <div class="brand-text">
+          <span><span style="color:#232B2B;">OwoAI</span></span>
+          <span style="color:#ffffff;">Financial Education Chatbot</span>
+        </div>
+      </div>
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about"><span style="color:#ffffff;">About</span> <span style="color:#232B2B;">OwoAI</span></a></li>
+          <li><a href="#how">How it helps</a></li>
+          <li><a href="#community">Community</a></li>
+          <li><a href="#contact" class="nav-cta"><span style="color:#ffffff;">Contact</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-shell">
+    <main>
+      <!-- Home / Hero -->
+      <section id="home">
+        <div class="grid">
+          <div>
+            <div class="card">
+              <div class="pill">
+                <span class="pill-dot"></span>
+                Your trusted & accessible financial mentor
+              </div>
+              <h1 class="hero-title">
+                Meet <span class="hero-highlight" style="color:#ffffff;">OwoAI</span></span> – your multilingual guide to
+                smarter money decisions.
+              </h1>
+              <p class="hero-text" style="color:#ffffff;">
+                Millions of unbanked and low-income individuals still lack access to safe, affordable
+                financial services. <span style="color:#ffffff;">OwoAI</span> turns complex money topics into clear, friendly guidance in
+                the languages people actually speak – helping them save, budget and build stability,
+                one simple chat at a time.
+              </p>
+
+              <div class="hero-metric-row">
+                <div class="hero-metric">
+                  <strong>Financial exclusion is still rising</strong>
+                  <span>Poverty in Nigeria is projected to reach 62% by 2026, affecting about 141 million people.</span>
+                </div>
+              </div>
+
+              <div class="hero-actions">
+                <a href="#contact" class="btn btn-primary" style="background:#D0F0C0; color:#2f3e2c;">Chat with <span style="color:#232B2B;">OwoAI</span> for your project</a>
+                <a href="#about" class="btn btn-ghost">Learn how <span style="color:#232B2B;">OwoAI</span> works</a>
+              </div>
+
+              <p class="hero-footnote" style="color:#ffffff;">
+                Built for <strong style="color:#ffffff;">low-income, unbanked and vulnerable individuals</strong> who need
+                financial education that is simple, safe and available on any device.
+              </p>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-orbit"></div>
+
+            <div class="hero-panel">
+              <div class="hero-panel-header">
+                <div class="hero-panel-user">
+                  <div class="avatar">T</div>
+                  <div>
+                    <strong><span style="color:#232B2B;">OwoAI</span> user</strong>
+                    <span>Market trader · Lagos</span>
+                  </div>
+                </div>
+                <span class="hero-chip">Voice • Chat • Local language</span>
+              </div>
+
+              <div class="chat-bubbles">
+                <div class="bubble user">
+                  I earn small money from my shop. How can I start saving without a bank account?
+                </div>
+                <div class="bubble bot">
+                  <strong><span style="color:#232B2B;">OwoAI</span>:</strong> Start with a tiny daily amount – like the price of a snack.
+                  Keep it in a safe place or mobile wallet, then choose a simple goal (like rent or
+                  school fees). I can help you create a weekly savings plan that fits your income.
+                </div>
+              </div>
+
+              <div class="hero-panel-footer">
+                <span>Ask in English, Hausa, Yoruba, Igbo or Pidgin…</span>
+                <button class="hero-mic" type="button" aria-label="Voice prompt">
+                  🎙
+                </button>
+              </div>
+
+              <div class="hero-badges">
+                <div class="hero-badge badge-1">
+                  <span></span>
+                  Money tips · Savings · Budgeting
+                </div>
+                <div class="hero-badge badge-2">
+                  <span></span>
+                  Nano-loans · Remittance guidance
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About <span style="color:#232B2B;">OwoAI</span> -->
+      <section id="about">
+        <p class="section-label" style="color:#ffffff;">About</p>
+        <h2 class="section-heading" style="color:#ffffff;">What is <span style="color:#ffffff;">OwoAI</span>?</h2>
+        <p class="section-subtitle" style="color:#ffffff;"><strong>OwoAI</strong> is a knowledge-based AI platform offering simple, accessible and multilingual financial and savings guidance to low-income and unbanked individuals – especially young people and women. It transforms complex financial terms into everyday language, so anyone can learn how to manage money with confidence.</p>
+
+        <div class="two-col">
+          <div class="card">
+            <h3 class="section-heading" style="font-size: 1.05rem; margin-bottom: 0.6rem;">What <span style="color:#232B2B;">OwoAI</span> teaches</h3>
+            <ul class="list">
+              <li>
+                <p class="list-item-label">Money management tips</p>
+                Learn how to track spending, avoid common money mistakes and make better day-to-day
+                financial decisions.
+              </li>
+              <li>
+                <p class="list-item-label">Savings goals &amp; habit building</p>
+                Turn small daily amounts into meaningful goals like rent, school fees or business
+                capital through consistent saving.
+              </li>
+              <li>
+                <p class="list-item-label">Budgeting made simple</p>
+                Break income into clear portions for needs, wants and savings using practical
+                examples tailored to low and irregular income.
+              </li>
+              <li>
+                <p class="list-item-label">Nano-loans &amp; remittances</p>
+                Understand how small loans, mobile money and remittance services work, so users can
+                borrow and receive funds safely.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 class="section-heading" style="font-size: 1.05rem; margin-bottom: 0.6rem;">Multilingual, accessible and safe</h3>
+            <p class="section-subtitle" style="margin-bottom: 0.85rem;">
+              Most financial education materials are only available in English. <span style="color:#232B2B;">OwoAI</span> is designed to
+              close this gap by speaking the language of the community – literally.
+            </p>
+            <div>
+              <p style="font-size: 0.84rem; color: var(--text-main); margin-bottom: 0.35rem;">Supports multiple Nigerian languages:</p>
+              <div class="pill-row">
+                <span class="tag">English</span>
+                <span class="tag">Hausa</span>
+                <span class="tag">Yoruba</span>
+                <span class="tag">Igbo</span>
+                <span class="tag">Nigerian Pidgin</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 1.1rem;">
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.55rem;">
+                <span style="color:#232B2B;">OwoAI</span> can integrate short explainer videos, audio snippets and visuals to support
+                people with low literacy. Here is an example of a quick financial education video:
+              </p>
+              <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/t2OK2sdv6-k" title="Financial education video" allowfullscreen></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it helps -->
+      <section id="how">
+        <p class="section-label" style="color:#ffffff;">Features</p>
+        <h2 class="section-heading" style="color:#ffffff;">How OwoAI helps users every day</h2>
+        <p class="section-subtitle" style="color:#ffffff;">
+          OwoAI is designed as a safe, educative space for people who are often left out of
+          traditional financial systems – helping them gain control over their money and future.
+        </p>
+
+        <div class="community-grid">
+          <div class="community-card">
+            <div class="community-pill"><span></span>Low-income &amp; vulnerable households</div>
+            <p class="community-label">Low-income individuals</p>
+            <p>
+              People living below the poverty line or struggling to make ends meet learn how to
+              stretch limited income, prioritise needs and build emergency buffers.
+            </p>
+          </div>
+
+          <div class="community-card">
+            <div class="community-pill"><span></span>Financially excluded</div>
+            <p class="community-label">Unbanked &amp; underbanked</p>
+            <p>
+              Individuals without formal bank accounts – or with very limited access – get guidance
+              on savings groups, mobile money, agent banking and safer cash handling.
+            </p>
+          </div>
+
+          <div class="community-card">
+            <div class="community-pill"><span></span>Women &amp; girls</div>
+            <p class="community-label">Women and girls</p>
+            <p>
+              <span style="color:#232B2B;">OwoAI</span> empowers women and girls with practical financial skills so they can support
+              their families, grow small businesses and make informed economic decisions.
+            </p>
+          </div>
+
+          <div class="community-card">
+            <div class="community-pill"><span></span>Youth &amp; students</div>
+            <p class="community-label">Youth &amp; students</p>
+            <p>
+              Young people learn how to budget allowances, avoid risky loans and build smart saving
+              habits early in life.
+            </p>
+          </div>
+
+          <div class="community-card">
+            <div class="community-pill"><span></span>Micro &amp; small businesses</div>
+            <p class="community-label">Small business owners &amp; entrepreneurs</p>
+            <p>
+              Market traders, artisans and micro-entrepreneurs receive guidance on separating
+              business and personal money, pricing, simple records and reinvestment.
+            </p>
+          </div>
+
+          <div class="community-card">
+            <div class="community-pill"><span></span>Inclusive-by-design</div>
+            <p class="community-label">People with disabilities</p>
+            <p>
+              Through voice prompts and accessible design, <span style="color:#232B2B;">OwoAI</span> ensures that people with
+              disabilities can access tailored financial information and support.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section id="contact">
+        <p class="section-label" style="color:#ffffff;">Contact</p>
+        <h2 class="section-heading" style="color:#ffffff;">Work with OwoAI or request a demo</h2>
+        <p class="section-subtitle" style="color:#ffffff;">
+          Whether you are designing a financial inclusion project, building a digital banking
+          product or running a community programme, <span style="color:#ffffff;">OwoAI</span> can power your financial education
+          experience.
+        </p>
+
+        <div class="contact-layout">
+          <div class="card contact-details">
+            <div>
+              <strong>Project lead:</strong><br />
+              Titilayo Odeyemi, MBA, ACA
+            </div>
+            <div>
+              <strong>Mobile:</strong><br />
+              <a href="tel:+2348033528667">+234 803 352 8667</a>
+            </div>
+            <div>
+              <strong>Email:</strong><br />
+              <a href="mailto:owoai2025@gmail.com">owoai2025@gmail.com</a>
+            </div>
+            <div class="contact-meta">
+              <span>📍 Based in Lagos, Nigeria</span>
+              <span>💬 Available for pilots, collaborations &amp; school projects</span>
+            </div>
+          </div>
+
+          <div class="contact-card">
+            <h3>Send a quick message</h3>
+            <p>
+              Use this simple form structure when embedding <span style="color:#232B2B;">OwoAI</span> on your website, landing page or
+              project portal.
+            </p>
+            <form class="contact-form">
+              <div class="field">
+                <label for="name">Full name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" />
+              </div>
+              <div class="field">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" />
+              </div>
+              <div class="field">
+                <label for="type">I am contacting as a…</label>
+                <select id="type" name="type">
+                  <option>NGO / nonprofit</option>
+                  <option>Financial institution</option>
+                  <option>Edtech / school</option>
+                  <option>Community-based organisation</option>
+                  <option>Individual learner</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="message">How would you like to use <span style="color:#232B2B;">OwoAI</span>?</label>
+                <textarea id="message" name="message" placeholder="Share a few details about your idea or project..."></textarea>
+              </div>
+              <div class="submit-row">
+                <button type="button" class="btn btn-primary">Preview message flow</button>
+                <p>
+                  This form is a visual demo. Connect it to your email, CRM or chatbot flow in your
+                  implementation.
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer style="color:#ffffff;">
+      <span>© <span id="year">2025</span> <span style="color:#ffffff;">OwoAI</span> – Financial Education Chatbot. All rights reserved.</span>
+      <span>Built as a one-page portfolio for <strong><span style="color:#ffffff;">OwoAI</span></strong> using vanilla HTML &amp; CSS.</span>
+    </footer>
+  </div>
+
+  <script>
+    // Update year automatically
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
